@@ -61,14 +61,10 @@ const CustomNavbar = () => {
         setWordCoinAddress(data)
     }
     return (
-        <header className="mb-8 flex items-center justify-between border-b py-4 md:mb-12 md:py-8 xl:mb-16">
+        <header className=" flex items-center justify-between border-b py-4  md:py-8 ">
             <a href="/" className="inline-flex items-center gap-2.5 text-2xl font-bold text-black md:text-3xl" aria-label="logo">
                 Nexarb
             </a>
-
-            <nav className="hidden gap-12 lg:flex">
-                <a href="#" className="text-lg font-semibold text-indigo-500">Home</a>
-            </nav>
 
             <IDKitWidget
                 app_id={process.env.NEXT_PUBLIC_WORLD_COIN_ID!}
