@@ -5,6 +5,7 @@ pragma solidity >=0.8.2 <0.9.0;
 import "trade/Trade.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "trade/interface/ITrade.sol";
+import "trade/interface/IWorldCoinVerifier.sol";
 
 contract TradeMarket {
     struct TradeData {
@@ -28,12 +29,24 @@ contract TradeMarket {
     }
 
     TradeData[] trades;
+    address worldCoinVerifier;
+
+
+    constructor(address _worldCoinVerifier){
+        worldCoinVerifier = _worldCoinVerifier;
+    }
+
+    modifier only_verified_users(uint256 nulifier) {
+        require(IWorldCoinVerifier(worldCoinVerifier).isUserVerified(nulifier),"You are not verified");
+        _;
+    }
 
     function createTrade(
         address lockedErc20Address,
         address demandedErc20Address,
-        uint256 demandedAmount
-    ) external {
+        uint256 demandedAmount,
+        uint256 nulifier
+    ) external only_verified_users(nulifier){
         address smartContractAddress = address(
             new Trade(
                 msg.sender,
