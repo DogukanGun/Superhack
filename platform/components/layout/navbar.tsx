@@ -19,22 +19,21 @@ const CustomNavbar = () => {
 
     const { switchChain } = useSwitchChain()
 
-    const { data: dataForOwnership } = useSimulateContract({
-        address: '0x234F92917d1FdFDE44B2B0E6f3411D2562cC7dFB',
-        abi: worldcoinAbi,
-        functionName: 'verifyAndExecute',
-        args: [userWalletAddress,
-            wordCoinAddress?.merkle_root,
-            wordCoinAddress?.nullifier_hash,
-            wordCoinAddress?.proof
-        ],
-    })
-
-    const { writeContract } = useWriteContract()
+    const { writeContract, isError } = useWriteContract()
 
     const sendTransaction = async () => {
         try {
-            writeContract(dataForOwnership?.request!)
+            switchChain({ chainId: baseSepolia.id })
+            writeContract({
+                address: '0x234F92917d1FdFDE44B2B0E6f3411D2562cC7dFB',
+                abi: worldcoinAbi,
+                functionName: 'verifyAndExecute',
+                args: [userWalletAddress,
+                    wordCoinAddress?.merkle_root,
+                    wordCoinAddress?.nullifier_hash,
+                    wordCoinAddress?.proof
+                ],
+            })
         } catch (error) {
             console.error('Transaction error:', error);
         }
@@ -44,18 +43,12 @@ const CustomNavbar = () => {
     useEffect(() => {
         if (address) {
             setUsetWalletAddress(address)
-            switchChain({ chainId: baseSepolia.id })
         }
-        if (dataForOwnership?.result !== undefined) {
-            console.log(dataForOwnership?.result)
-        }
-        if (wordCoinAddress !== undefined && dataForOwnership?.request) {
+        if (wordCoinAddress !== undefined) {
             sendTransaction()
         }
-    }, [address, dataForOwnership?.result, wordCoinAddress])
+    }, [address, wordCoinAddress])
 
-    const verifyProof = async () => {
-    };
     const onSuccess = (data: ISuccessResult) => {
         console.log(data);
         setWordCoinAddress(data)
@@ -70,7 +63,6 @@ const CustomNavbar = () => {
                 app_id={process.env.NEXT_PUBLIC_WORLD_COIN_ID!}
                 action="login"
                 verification_level={VerificationLevel.Device}
-                handleVerify={verifyProof}
                 onSuccess={onSuccess}>
                 {({ open }) => (
                     <div className="flex flex-col gap-4">
