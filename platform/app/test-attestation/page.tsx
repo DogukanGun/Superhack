@@ -1,5 +1,4 @@
-// app/test-attestation/index.tsx
-
+'use client'
 import Head from 'next/head';
 import AttestationForm from '../../components/forms/AttestationForm';
 
