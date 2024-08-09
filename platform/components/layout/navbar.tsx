@@ -62,7 +62,8 @@ const CustomNavbar = () => {
             <IDKitWidget
                 app_id={process.env.NEXT_PUBLIC_WORLD_COIN_ID!}
                 action="login"
-                verification_level={VerificationLevel.Device}
+                signal={address}
+                verification_level={VerificationLevel.Orb}
                 onSuccess={onSuccess}>
                 {({ open }) => (
                     <div className="flex flex-col gap-4">
