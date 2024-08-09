@@ -1,0 +1,174 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_aiComputation",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "lockedErc20Address",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "demandedAmount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "iban",
+				"type": "string"
+			}
+		],
+		"name": "createEscrow",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "lockedErc20Address",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "demandedErc20Address",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "demandedAmount",
+				"type": "uint256"
+			}
+		],
+		"name": "createTrade",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getEscrows",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "lockedErc20Address",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "lockedErc20Symbol",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "lockedAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "demandedAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "smartContract",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "seller",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "iban",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "isOpen",
+						"type": "bool"
+					}
+				],
+				"internalType": "struct TradeMarket.EscrowDataResponse[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getTrades",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "lockedErc20Address",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "lockedErc20Symbol",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "lockedAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "demandedErc20Address",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "demandedErc20Symbol",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "demandedAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "smartContract",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "seller",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "isOpen",
+						"type": "bool"
+					}
+				],
+				"internalType": "struct TradeMarket.TradeDataResponse[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]

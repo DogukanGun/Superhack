@@ -2,7 +2,6 @@
 
 pragma solidity >=0.8.2 <0.9.0;
 
-import "trade/interface/IWorldCoinVerifier.sol";
 
 interface IWorldID {
     /// @notice Reverts if the zero-knowledge proof is invalid.
@@ -24,7 +23,7 @@ interface IWorldID {
 }
 
 
-contract WorldCoinVerifier is IWorldCoinVerifier {
+contract WorldCoinVerifier  {
     error InvalidNullifier();
 
     event MessageSent(string message);

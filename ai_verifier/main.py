@@ -1,4 +1,5 @@
 import base64
+import json
 import os
 
 from fastapi import FastAPI
@@ -42,8 +43,21 @@ async def verify_bank_transfer(
     else:
         print(f"The file {file_path} does not exist.")
 
+    # Extract the information from the response
+    extracted_info = json.loads(res["message"]["content"])
+
+    # Convert the extracted information to the required format
+    iban = extracted_info['iban']
+    amount = extracted_info['amount']
+    currency = extracted_info['currency']
+
     # TODO Call function in smart contract to check the transfer
-    return {"message": res["message"]["content"]}
+    return {
+        "message": "Transfer verified and attestation created",
+        "iban": iban,
+        "amount": amount,
+        "currency": currency
+    }
 
 
 if __name__ == "__main__":

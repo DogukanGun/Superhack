@@ -6,6 +6,7 @@ import worldcoinAbi from "../../public/worldcoin-verifier.abi.json"
 import { useAccount, useSimulateContract, useSwitchChain, useWriteContract } from "wagmi";
 import { baseSepolia } from "viem/chains";
 import { ConnectKitButton } from "connectkit";
+import { useRouter } from "next/navigation";
 declare global {
     interface Window {
         ethereum?: any;
@@ -18,6 +19,7 @@ const CustomNavbar = () => {
     const { address } = useAccount()
 
     const { switchChain } = useSwitchChain()
+    const router  = useRouter()
 
     const { writeContract, isError } = useWriteContract()
 
@@ -25,15 +27,16 @@ const CustomNavbar = () => {
         try {
             switchChain({ chainId: baseSepolia.id })
             writeContract({
-                address: '0x234F92917d1FdFDE44B2B0E6f3411D2562cC7dFB',
+                address: '0x8749F80ae877A0630a6F85Dd67f8468BBd1369ff',
                 abi: worldcoinAbi,
                 functionName: 'verifyAndExecute',
                 args: [userWalletAddress,
-                    wordCoinAddress?.merkle_root,
-                    wordCoinAddress?.nullifier_hash,
+                    Number(wordCoinAddress?.merkle_root),
+                    Number(wordCoinAddress?.nullifier_hash),
                     wordCoinAddress?.proof
                 ],
             })
+            router.push("/trade");
         } catch (error) {
             console.error('Transaction error:', error);
         }
@@ -62,7 +65,8 @@ const CustomNavbar = () => {
             <IDKitWidget
                 app_id={process.env.NEXT_PUBLIC_WORLD_COIN_ID!}
                 action="login"
-                verification_level={VerificationLevel.Device}
+                signal={address}
+                verification_level={VerificationLevel.Orb}
                 onSuccess={onSuccess}>
                 {({ open }) => (
                     <div className="flex flex-col gap-4">
