@@ -30,7 +30,7 @@ const Invoince = () => {
 
         try {
             //Send request to API route
-            const response = await axios.post<AttestationResponse>('/api/verify', {
+            const response = await axios.post<AttestationResponse>('/api/attest', {
                 trade_contract_address: smartContract,
                 base64
             });
