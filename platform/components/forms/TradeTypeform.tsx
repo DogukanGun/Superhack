@@ -3,13 +3,13 @@
 import AttestationForm from "./AttestationForm"
 
 type P = {
-    onTypeClick:(type:TradeType)=>void
+    onTypeClick: (type: TradeType) => void
 }
 
-export type TradeType = 'sell_for_cash'|'sell_for_coin'|'buy_with_coin'|'buy_with_cash'
+export type TradeType = 'sell_for_cash' | 'sell_for_coin' | 'buy_with_coin' | 'buy_with_cash'
 
 const TypeForm = (
-    { onTypeClick }:P
+    { onTypeClick }: P
 ) => {
     return (
         <><div className="bg-white py-6 sm:py-8 lg:py-12">
@@ -66,7 +66,7 @@ const TypeForm = (
                     </button>
                 </div>
             </div>
-        </div><AttestationForm /></>
+        </div></>
     )
 }
 

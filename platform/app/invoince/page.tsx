@@ -1,22 +1,93 @@
 "use client"
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
+import { EAS, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
+import { ethers } from 'ethers';
+import axios from "axios";
+
+type AttestationResponse = {
+    iban: string;
+    amount: string;
+    currency: string;
+};
 
 const Invoince = () => {
     const [smartContract, setSmartContract] = useState("")
+    const [base64, setBase64] = useState('');
+    const [attestationUID, setAttestationUID] = useState<string>('');
 
-    const sendInvoince = () =>{
+    const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setBase64(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
-    }
+    const handleSubmit = async () => {
+
+        try {
+            //Send request to API route
+            const response = await axios.post<AttestationResponse>('/api/verify', {
+                trade_contract_address: smartContract,
+                base64
+            });
+
+            //const { iban, amount, currency } = response.data; // Hardcoded for now
+            const iban = response.data.iban;
+            const amount = response.data.amount;
+            const currency = response.data.currency;
+
+            // Set up EAS
+            const easContractAddress = '0x4200000000000000000000000000000000000021';
+            const schemaUID = '0xeca168efa37281d63315562fecb4af364354d524e7bbe71007d35134dcd9ac3a';
+            const eas = new EAS(easContractAddress);
+
+            // Initialize ethers signer (replace with your signer)
+            const provider = new ethers.BrowserProvider(window.ethereum);
+            const signer = await provider.getSigner();
+            await eas.connect(signer);
+
+            // Initialize SchemaEncoder with the schema string
+            const schemaEncoder = new SchemaEncoder('string iban,string amount,string currency');
+            const encodedData = schemaEncoder.encodeData([
+                { name: 'iban', value: iban, type: 'string' },
+                { name: 'amount', value: amount, type: 'string' },
+                { name: 'currency', value: currency, type: 'string' }
+            ]);
+
+            // Create attestation
+            const tx = await eas.attest({
+                schema: schemaUID,
+                data: {
+                    recipient: '0x0000000000000000000000000000000000000000',
+                    expirationTime: BigInt(0),
+                    revocable: true,
+                    data: encodedData,
+                },
+            });
+
+            const newAttestationUID = await tx.wait();
+            //const newAttestationUID = receipt.events[0].args.uid;
+            setAttestationUID(newAttestationUID);
+
+            console.log('New attestation UID:', newAttestationUID);
+        } catch (error) {
+            console.error('Failed to create attestation:', error);
+        }
+    };
+
     return (
 
         <div className="relative h-screen overflow-x-auto mt-10 mb-10 text-white">
             <div className="mb-10 md:mb-16">
                 <h2 className="mb-4 text-center text-2xl font-bold text-gray-800 md:mb-6 lg:text-3xl">Please Upload Your Receipt</h2>
-
             </div>
 
             <div className="mb-5">
-                <label htmlFor="erc20" className="mb-2 inline-block text-sm text-gray-800 sm:text-base">Your IBAN</label>
+                <label htmlFor="erc20" className="mb-2 inline-block text-sm text-gray-800 sm:text-base">Your Trade Contract Address</label>
                 <input
                     value={smartContract}
                     onChange={(event) => setSmartContract(event.target.value)}
@@ -32,11 +103,11 @@ const Invoince = () => {
                         <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
                         <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
                     </div>
-                    <input id="dropzone-file" type="file" className="hidden" />
+                    <input onChange={handleImageUpload} id="dropzone-file" type="file" className="hidden" />
                 </label>
             </div>
 
-            <button onClick={sendInvoince} className="block mt-5 w-full rounded-lg bg-gray-800 px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-gray-300 transition duration-100 hover:bg-gray-700 focus-visible:ring active:bg-gray-600 md:text-base">Upload</button>
+            <button onClick={handleSubmit} className="block mt-5 w-full rounded-lg bg-gray-800 px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-gray-300 transition duration-100 hover:bg-gray-700 focus-visible:ring active:bg-gray-600 md:text-base">Upload</button>
 
         </div>
 
