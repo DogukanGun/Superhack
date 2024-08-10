@@ -5,22 +5,30 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./interface/ITrade.sol";
 
-contract Trade is Ownable, ITrade {
+contract Escrow is Ownable {
     address lockedErc20;
-    address demandedErc20;
+    string iban;
     uint256 demandedAmount;
     uint256 lockedAmount;
+    address aiComputation;
 
     constructor(
         address seller,
         address _lockedErc20,
-        address _demandedErc20,
-        uint256 _demandedAmount
+        string memory _iban,
+        uint256 _demandedAmount,
+        address _aiComputation
     ) Ownable(seller) {
         lockedErc20 = _lockedErc20;
-        demandedErc20 = _demandedErc20;
+        iban = _iban;
         demandedAmount = _demandedAmount;
         lockedAmount = 0;
+        aiComputation = _aiComputation;
+    }
+
+    modifier only_ai_computation(){
+        require(msg.sender == aiComputation,"Only ai can call this function");
+        _;
     }
 
     function getDemandedAmount() external view returns (uint256) {
@@ -41,14 +49,7 @@ contract Trade is Ownable, ITrade {
         return lockedAmount;
     }
 
-    function unlock() external {
-        require(
-            demandedAmount ==
-                ERC20(demandedErc20).allowance(msg.sender, address(this)),
-            "Please allow for the payment first"
-        );
-        require(lockedAmount != 0, "Please wait owner to lock the contract");
-        ERC20(demandedErc20).transferFrom(msg.sender, owner(), demandedAmount);
-        ERC20(lockedErc20).transfer(msg.sender, demandedAmount);
+    function unlock(address newOwner) external only_ai_computation {
+        ERC20(lockedErc20).transfer(newOwner, demandedAmount);
     }
 }

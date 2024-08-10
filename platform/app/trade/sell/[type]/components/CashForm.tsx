@@ -26,7 +26,7 @@ const CashForm = () => {
     const sendTransaction = () => {
         switchChain({ chainId: baseSepolia.id })
         writeContract({
-            address: '0x6dA6ac6E51a4cA0d9D79a689DDb8ef64A921C3C1',
+            address: '0x6fCf751f3B761f46e70F1BA9A7b50608C6Ddd466',
             abi: marketAbi,
             functionName: 'createEscrow',
             args: [formData.lockedErc20,
