@@ -41,7 +41,7 @@ const Buy = () => {
     const { address } = useAccount()
     const { data } = useReadContract({
         abi: marketAbi,
-        address: '0x6fCf751f3B761f46e70F1BA9A7b50608C6Ddd466',
+        address: '0x19645f6aBA4D66B48067ddAA1785bb67CAD50016',
         functionName: functionName,
     })
 
