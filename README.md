@@ -48,9 +48,10 @@ To start using NexTrade:
 
 - WorldCoinVerifier: `0x8749F80ae877A0630a6F85Dd67f8468BBd1369ff`
 - Attestation Schema: `https://base-sepolia.easscan.org/schema/view/0xeca168efa37281d63315562fecb4af364354d524e7bbe71007d35134dcd9ac3a`
+- Trade Market `0x19645f6aBA4D66B48067ddAA1785bb67CAD50016`
+- Examle Trade Contract `0xA0aEb3cD1967d2BABFb418f422FbBd5941E4426c`
 
 ## License
 
 NexTrade is licensed under the MIT License.
-
 
